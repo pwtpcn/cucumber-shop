@@ -13,9 +13,13 @@ public class Order {
         this.date = LocalDateTime.now();
     }
 
-    public void addItem(Product prod, int quantity) {
-        items.add(new OrderItem(prod, quantity));
-        prod.cutStock(quantity);
+    public void addItem(Product prod, int quantity) throws OutOfStockException{
+        if(prod.getStock() > 0 && prod.getStock() > quantity) {
+            items.add(new OrderItem(prod, quantity));
+            prod.cutStock(quantity);
+        } else {
+            throw new OutOfStockException("Item '" + prod.getName() + "' is out of stock.");
+        }
     }
 
     public double getTotal() {
